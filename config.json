@@ -1,0 +1,41 @@
+{
+  "mysql": {
+    "config": {
+      "user": "root",
+      "password": "",
+      "host": "127.0.0.1",
+      "raise_on_warnings": true
+    },
+    "db_name": "LIFE_TAG",
+    "tables": {
+      "games": {
+        "name": "games",
+        "cols": {
+          "username": "username",
+          "subBoardSize": "subBoardSize",
+          "boardSize": "boardSize",
+          "boardRank": "boardRank",
+          "EG": "EG"
+
+          }
+      },
+      "users": {
+        "name": "users",
+        "cols": {
+          "username": "username",
+          "hashedPass": "hashedPass",
+          "boardList": "boardList"
+        }
+      },
+      "history": {
+        "name": "history",
+        "cols": {
+          "matchID": "matchID",
+          "boardSize": "boardSize",
+          "subBoardSize": "subBoardSize",
+          "boardList": "boardList"
+        }
+      }
+    }
+  }
+}

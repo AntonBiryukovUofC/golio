@@ -10,7 +10,7 @@ class Cell:
         if len(parent_id_count) == 1:
             new_id = parent_id_count.most_common(1)[0][0]
         else:
-            highest_count = parent_id_count.most_common(1)[0]
+            highest_count = parent_id_count.most_common(1)[0][1]
             possible_parents = [key for key in parent_id_count if parent_id_count[key] == highest_count]
             new_id = random.choice(possible_parents)
 

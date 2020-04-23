@@ -1,24 +1,45 @@
-<html>
-<head>
+{% extends "layout.html" %}
+{% block style %}
+<style>
+  .inputbox {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border: 1px black solid;
+  }
+  .selected {
+    background-color: #111;
+  }
+</style>
+{% endblock %}
 
-</head>
 
-
+{% block body %}
 <div id="inputboxes">
   {% for i in range(boardSize) %}
     {% for j in range(boardSize) %}
-      <input type="checkbox" id="[{{i}},{{j}}]"></input>
-      {% endfor %}
+<div class="inputbox" onclick="invertClick(this)" onmousedown="mousedown=true" onmouseup="mousedown=false" onmouseover="invertSelection(this)"></div>
+    {% endfor %}
     <br/>
   {% endfor %}
 </div>
 <button onclick="submitBoard()">Start Game</button><br/>
+{% endblock %}
 
-
+{% block script %}
 <script type="text/javascript">
+var mousedown = false;
+
+const invertSelection = (element) => {
+  if (mousedown) {
+    element.classList.toggle('selected')
+  }
+}
+
+const invertClick = (element) => element.classList.toggle('selected')
+
 function submitBoard(){
 
 }
 </script>
-</body>
-</html>
+{% endblock %}

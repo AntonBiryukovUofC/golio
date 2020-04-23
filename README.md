@@ -34,3 +34,7 @@ subBoardSize    int
 boardList       JSON      (boardID, EG, AG)
 
 ________________________________________________________________________________
+
+
+
+  pg_ctl -D /usr/local/var/postgres start

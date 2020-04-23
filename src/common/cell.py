@@ -4,8 +4,8 @@ import random
 
 
 class Cell:
-    @classmethod
-    def birth_from_parents(cls, parents: List['Cell']):
+    @staticmethod
+    def birth_from_parents(parents: List['Cell']):
         parent_id_count = Counter([cell.team_id for cell in parents])
         if len(parent_id_count) == 1:
             new_id = parent_id_count.most_common(1)[0][0]

@@ -27,7 +27,7 @@ class Servlet:
     @app.route("/input", methods=["GET", "POST"])
     def input(boardSize=None):
         if(boardSize not in [5,10,20,30]):
-            boardSize = 5
+            boardSize = 25
         print(boardSize)
         if(request.method == "GET"):
             return render_template('input.html',boardSize=boardSize)
@@ -40,7 +40,7 @@ class Servlet:
     @app.route("/test", methods=["GET", "POST"])
     def test(boardSize=None):
         if(boardSize not in [5,10,20,30]):
-            boardSize = 5
+            boardSize = 25
         print(boardSize)
         if(request.method == "GET"):
             return render_template('tag.html',boardSize=boardSize)

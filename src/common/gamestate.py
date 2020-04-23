@@ -102,7 +102,7 @@ class GameState:
         return np_array
 
     @staticmethod
-    def gamestate_from_numpy_array(array):
+    def from_numpy_array(array):
         y = array.shape[0]
         x = array.shape[1]
         state = GameState(y, x)
@@ -111,6 +111,8 @@ class GameState:
             for jj in range(0, x):
                 if array[ii, jj] != 0:
                     state[ii, jj] = Cell(team_id=array[ii, jj])
+
+        return state
 
     @staticmethod
     def copy_gamestate(gamestate: 'GameState'):

@@ -1,7 +1,3 @@
-import mysql.connector as db
-import config
-
-config = config.get()
 
 class Game:
 

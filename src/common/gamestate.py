@@ -59,7 +59,6 @@ class GameState:
         y, x = yx_tuple
         self.grid[y][x] = value
 
-
     def step(self):
         """Run a step in conways game of life"""
         new_state = GameState(self.y, self.x)
@@ -78,4 +77,10 @@ class GameState:
                 else:
                     # Cell dies
                     new_state[y, x] = None
+
+    def apply_subboard(self, y, x, subboard):
+        for ii in range(0, subboard.y):
+            for jj in range(0, subboard.x):
+                self[y+ii, x+jj] = subboard[ii,jj]
+
 

@@ -3,10 +3,10 @@ import game
 from flask_sqlalchemy import SQLAlchemy
 import os
 
+from models import Board
 
 app = Flask(__name__)
-
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
 
 
@@ -22,9 +22,12 @@ class Servlet:
         return render_template('landing.html')
 
     #store into db TODO
-    @app.route("/submit_board")
+    @app.route("/submit_board", methods=["POST"])
     def submit_board():
-        self.cursor.execute("insert into games {0}").format(request.form['userBoard'],request.form['userID'])
+        data = request.form
+        new_board = Board(board_elo=1500, owner="current_user")
+        db.session.add(new_board)
+        db.session.commit()
         return
         
     #get request returns the input page for a user to submit their eventual board TODO
@@ -37,14 +40,17 @@ class Servlet:
 
     #eventual edit maybe TODO
     @app.route("/input/<int:board_id>")
+    def edit_input():
         return
 
     #list all results from db query TODO
     @app.route("/results", methods=["GET"])
+    def history():
         return
 
     #visualize a game TODO
     @app.route("/results/<int:game_id>")
+    def game():
         return
 
     #get request returns the input page for a user to submit their eventual board TODO

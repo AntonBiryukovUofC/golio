@@ -5,9 +5,10 @@ import pandas as pd
 import panel as pn
 import panel.widgets as pnw
 import param
-from bokeh.models import ColumnDataSource, LinearColorMapper
+from bokeh.models import ColumnDataSource,LinearColorMapper
 from bokeh.plotting import figure, curdoc
 from bokeh.palettes import Colorblind8
+from src.common.gamestate import GameState
 
 
 def get_arg(key, args, default):
@@ -45,14 +46,14 @@ N_y = X.shape[0]
 N_x = X.shape[1]
 
 n_steps = get_arg('n_steps', args, 1000)
-X = X.astype(bool)
+X = X.astype(int)
+
 
 # args = pn.state.curdoc.session_context.request.arguments
 # print(f'Panel side {args}')
 
 new_palette = ['#FFFFFF'] + Colorblind8
-mapper = LinearColorMapper(palette=new_palette, low=0, high=4)
-
+mapper = LinearColorMapper(palette=new_palette,low = 0,high=4)
 
 def life_step_1(X):
     """Game of life step using generator expressions"""
@@ -70,13 +71,13 @@ def life_step_2(X):
 
 
 def life_do_steps(X, n_steps):
+    print('Calculating all steps....')
+    gs = GameState(size_y=X.shape[0], size_x=X.shape[1], init_state=X)
     X_dict = {}
     for i in range(n_steps):
-        X = life_step_2(X)
-        r = np.random.randint(low=1, high=4, size=X.shape)
-        col_X = X.astype(int).copy()
-        col_X = r * col_X
-        X_dict[i] = col_X
+        gs = gs.step()
+        X = gs.get_numpy_array()
+        X_dict[i] = X
     return X_dict
 
 

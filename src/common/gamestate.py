@@ -102,7 +102,7 @@ class GameState:
         return np_array
 
     @staticmethod
-    def gamestate_from_numpy_array(array):
+    def from_numpy_array(array):
         y = array.shape[0]
         x = array.shape[1]
         state = GameState(y, x)

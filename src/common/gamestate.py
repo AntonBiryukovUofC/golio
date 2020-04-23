@@ -112,6 +112,8 @@ class GameState:
                 if array[ii, jj] != 0:
                     state[ii, jj] = Cell(team_id=array[ii, jj])
 
+        return state
+
     @staticmethod
     def copy_gamestate(gamestate: 'GameState'):
         new_state = GameState(gamestate.y, gamestate.x)

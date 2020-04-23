@@ -48,7 +48,7 @@ class GameState:
 
     def get_live_neighbor_count(self, y, x):
         neighbors = self.get_cell_neighbors(y, x)
-        return len([x for x in neighbors in x is not None])
+        return len([x for x in neighbors if x is not None])
 
     def __getitem__(self, yx_tuple):
         y, x = yx_tuple

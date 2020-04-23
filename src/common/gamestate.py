@@ -1,5 +1,7 @@
 from enum import Enum, auto
 import numpy as np
+from numba import njit
+
 from .cell import Cell
 
 
@@ -12,6 +14,7 @@ class Direction(Enum):
     DOWN_LEFT = auto
     DOWN = auto()
     DOWN_RIGHT = auto()
+
 
 UP_DIRS = [Direction.UP, Direction.UP_LEFT, Direction.UP_RIGHT]
 DOWN_DIRS = [Direction.DOWN, Direction.DOWN_LEFT, Direction.DOWN_RIGHT]
@@ -29,6 +32,7 @@ class GameState:
         for ii in range(0, self.y):
             self.grid.append([None]*self.x)
 
+    @njit
     def get_cell_neighbor(self, y, x, direction):
         if direction in UP_DIRS:
             y = (y-1) % self.y
@@ -42,11 +46,13 @@ class GameState:
 
         return self.grid[y][x]
 
+    @njit
     def get_cell_neighbors(self, y, x):
         return tuple(
             self.get_cell_neighbor(y, x, dir) for dir in Direction
         )
 
+    @njit
     def get_live_neighbor_count(self, y, x):
         neighbors = self.get_cell_neighbors(y, x)
         return len([x for x in neighbors if x is not None])
@@ -59,6 +65,7 @@ class GameState:
         y, x = yx_tuple
         self.grid[y][x] = value
 
+    @njit(parallel=True)
     def step(self):
         """Run a step in conways game of life"""
         new_state = GameState(self.y, self.x)

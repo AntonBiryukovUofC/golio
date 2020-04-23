@@ -28,7 +28,6 @@ class GameState:
         for ii in range(0, self.y):
             self.grid.append([None]*self.x)
 
-
     def get_cell_neighbor(self, y, x, direction):
         if direction in UP_DIRS:
             y = (y-1) % self.y
@@ -77,6 +76,8 @@ class GameState:
                 else:
                     # Cell dies
                     new_state[y, x] = None
+
+        return new_state
 
     def apply_subboard(self, y, x, subboard):
         for ii in range(0, subboard.y):

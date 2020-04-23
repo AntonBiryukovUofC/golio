@@ -21,27 +21,38 @@ class Servlet:
     def home():
         return render_template('landing.html')
 
-    #get request returns the input page for a user to submit their eventual board
+    #store into db TODO
+    @app.route("/submit_board")
+    def submit_board():
+        self.cursor.execute("insert into games {0}").format(request.form['userBoard'],request.form['userID'])
+        return
+        
+    #get request returns the input page for a user to submit their eventual board TODO
     #post retrieves the actual board input and submits it into the game queue for eventual playing with others in the queue
-    @app.route("/input/<int:boardSize>", methods=["GET", "POST"])
-    @app.route("/input", methods=["GET", "POST"])
+    @app.route("/input", methods=["GET"])
     def input(boardSize=None):
-        if(boardSize not in [5,10,20,30]):
-            boardSize = 5
-        print(boardSize)
-        if(request.method == "GET"):
-            return render_template('input.html',boardSize=boardSize)
-        elif(request.method == "POST"):
-            self.cursor.execute("insert into games {0}").format(request.form['userBoard'],request.form['userID'])
+        boardSize = 30
 
-    #get request returns the input page for a user to submit their eventual board
+        return render_template('input.html',boardSize=boardSize)
+
+    #eventual edit maybe TODO
+    @app.route("/input/<int:board_id>")
+        return
+
+    #list all results from db query TODO
+    @app.route("/results", methods=["GET"])
+        return
+
+    #visualize a game TODO
+    @app.route("/results/<int:game_id>")
+        return
+
+    #get request returns the input page for a user to submit their eventual board TODO
     #post retrieves the actual board input and submits it into the game queue for eventual playing with others in the queue
     @app.route("/test/<int:boardSize>", methods=["GET", "POST"])
     @app.route("/test", methods=["GET", "POST"])
     def test(boardSize=None):
-        if(boardSize not in [5,10,20,30]):
-            boardSize = 5
-        print(boardSize)
+        boardSize = 30
         if(request.method == "GET"):
             return render_template('tag.html',boardSize=boardSize)
         elif(request.method == "POST"):

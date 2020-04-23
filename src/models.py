@@ -11,11 +11,10 @@ class History(db.Model):
     winner = db.Column(db.Integer)
 
     def __init__(self, boards_included):
-        self.url = url
         self.boards_included = boards_included
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return f"<id {self.id}>"
 
 class Board(db.Model):
     __tablename__ = 'boards'
@@ -24,8 +23,13 @@ class Board(db.Model):
     board_elo = db.Column(db.Integer)
     owner = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    def __init__(self, owner):
+        self.board_elo = 1500
+        self.owner = owner
+
     def __repr__(self):
-        return f'<Board {self.id}>'
+        return f"<Board {self.id}>"
+
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -35,4 +39,4 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
 
     def __repr__(self):
-        return '<User {self.user}>'.format(self.username)
+        return f"<User {self.user}>"

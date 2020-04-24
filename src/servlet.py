@@ -115,7 +115,6 @@ class Servlet:
     # list all results from db query TODO
     @app.route("/games", methods=["GET"])
     def history():
-        print(list(History.query.all()))
         return render_template('games.html', games=History.query.all())
 
     # visualize a game TODO

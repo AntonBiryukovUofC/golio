@@ -53,7 +53,7 @@ X = X.astype(int)
 # args = pn.state.curdoc.session_context.request.arguments
 # print(f'Panel side {args}')
 
-new_palette = ['#FFFFFF'] + Colorblind8
+new_palette = ['#FFFFFF'] + list(Colorblind8)
 mapper = LinearColorMapper(palette=new_palette,low = 0,high=4)
 
 def life_step_1(X):

@@ -1,0 +1,18 @@
+{% block head %}
+<title> Life Player</title>
+
+
+{% endblock %}
+
+{% block body %}
+{% block content %}
+    <p> Hello Life player !!!</p>
+    <div id="cloader">
+    <img src="/static/loader.gif">
+    </div>
+    {{ bokeh_script|indent(4)|safe }}
+{% endblock %}
+{% block scripts %}
+<script> document.getElementById("cloader").style.display = "none";</script>
+{% endblock %}
+{% endblock %}

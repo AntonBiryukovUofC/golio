@@ -65,7 +65,7 @@ class Servlet:
             db.session.commit()
             board_owner = new_user.username
         else:
-            board_owner = User.query.filter(User.username==data["user"]).first().username
+            board_owner = User.query.filter(User.username == data["user"]).first().username
 
         new_board = Board(owner=board_owner, board=data["board"])
         db.session.add(new_board)
@@ -134,8 +134,8 @@ class Servlet:
         if username is None:
             return render_template('boards.html', otherboards=Board.query.all(), username=None)
         else:
-            board_owner = User.query.filter(User.username==username).first().username
-            return render_template('boards.html', userboards=Board.query.filter(Board.board_owner==board_owner),
+            board_owner = User.query.filter(User.username == username).first().username
+            return render_template('boards.html', userboards=Board.query.filter(Board.board_owner == board_owner),
                                    otherboards=Board.query.filter(Board.board_owner != board_owner), username=username)
 
     # list all results from db query TODO
@@ -148,7 +148,6 @@ class Servlet:
         bokeh_process.kill()
         os.environ['bokeh_runs'] = 'no'
 
-
     @app.route("/results/<int:game_id>")
     def game(game_id):
         # pull game from History.
@@ -156,20 +155,23 @@ class Servlet:
         print(game_to_vis)
         board_ids = game_to_vis.boards_included
 
-        boards = Board.query.filter(Board.id.in_(board_ids)).all()
+        match_data = []
+        for b_id in board_ids:
+            board = Board.query.get(b_id)
+            username = board.board_owner
+            board_data = np.array(board.board)
+            match_data.append((username, board_data))
+
         # assemble the boards
-        boards_list = [np.array(x.board) for x in boards]
-        print([b.shape for b in boards_list])
-        board_big = build_board(boards_list)
+        board_big = build_board(match_data)
 
         # Create a dictionary (JSON) :
         # dict_data = {'X':[[1,0,3],[0,3,2]],'n_steps':400}
-        board_data = {'X':board_big,'n_steps':1000}
+        board_data = {'X': board_big.get_numpy_array().tolist(), 'n_steps': 1000}
+        print(board_data)
         script = server_document(
             url="http://localhost:5006/lifeplayer_plot", arguments=board_data)
-        print(script)
         return render_template("lifeplayer_template.html", bokeh_script=script)
-
 
     # get request returns the input page for a user to submit their eventual board TODO
     # post retrieves the actual board input and submits it into the game queue for eventual playing with others in the queue

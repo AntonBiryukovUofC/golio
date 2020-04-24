@@ -3,7 +3,7 @@
 {% block body %}
 <li>
   {% for game in games %}
-    <ul>{{game}}</ul>
+    <ul>Game Between Boards {{game.boards_included}}, Winner= {{game.winner}}</ul>
   {% endfor %}
 </li>
 {% endblock %}

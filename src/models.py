@@ -1,4 +1,3 @@
-from sqlalchemy.dialects.postgresql import JSON
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -22,13 +21,15 @@ class Board(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     board_elo = db.Column(db.Integer)
     owner = db.Column(db.Integer, db.ForeignKey('user.id'))
+    board = db.Column(db.ARRAY(db.Integer))
+    width = db.Column(db.Integer)
 
     def __init__(self, owner):
         self.board_elo = 1500
         self.owner = owner
 
     def __repr__(self):
-        return f"<Board {self.id}>"
+        return f"<Board {self.id} {self.board_elo} {self.owner}>"
 
 
 class User(db.Model):

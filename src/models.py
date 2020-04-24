@@ -23,7 +23,7 @@ class Board(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     board_name = db.Column(db.String(128))
     board_elo = db.Column(db.Integer)
-    board_owner = db.Column(db.Integer, db.ForeignKey('users.id'))
+    board_owner = db.Column(db.String(128), db.ForeignKey('users.username'))
     board = db.Column(db.JSON)
 
     def __init__(self, owner, board):
@@ -33,15 +33,17 @@ class Board(db.Model):
         self.board_name = "test"
 
     def __repr__(self):
+        return {"id":{self.id},"board_elo": {self.board_elo},"board_owner": {self.board_owner},"board_name": {self.board_name},"board": {self.board}}
+
+    def __str__(self):
         return f"<Board {self.id} {self.board_elo} {self.board_owner} {self.board_name} {self.board}>"
 
 
 class User(db.Model):
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
     #email = db.Column(db.String(120), unique=True, nullable=False)
 
     def __repr__(self):
-        return f"<User {self.id} {self.username}>"
+        return f"<User {self.username}>"

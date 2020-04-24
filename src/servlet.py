@@ -7,7 +7,7 @@ import json
 from models import Board, History, User, db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@localhost/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/postgres'
 db.init_app(app)
 app.app_context().push()
 db.create_all()
@@ -35,11 +35,11 @@ class Servlet:
             new_user = User(username=data["user"])
             db.session.add(new_user)
             db.session.commit()
-            user_id = new_user.id
+            board_owner = new_user.username
         else:
-            user_id = User.query.filter(User.username==data["user"]).first().id
+            board_owner = User.query.filter(User.username==data["user"]).first().username
 
-        new_board = Board(owner=user_id, board=data["board"])
+        new_board = Board(owner=board_owner, board=data["board"])
         db.session.add(new_board)
         db.session.commit()
         return 'success', 200
@@ -73,9 +73,9 @@ class Servlet:
         if username is None:
             return render_template('boards.html', otherboards=Board.query.all(), username=None)
         else:
-            user_id = User.query.filter(User.username==username).first().id
-            return render_template('boards.html', userboards=Board.query.filter(Board.board_owner==user_id),
-                                   otherboards=Board.query.filter(Board.board_owner != user_id), username=username)
+            board_owner = User.query.filter(User.username==username).first().username
+            return render_template('boards.html', userboards=Board.query.filter(Board.board_owner==board_owner),
+                                   otherboards=Board.query.filter(Board.board_owner != board_owner), username=username)
 
     #list all results from db query TODO
     @app.route("/games", methods=["GET"])

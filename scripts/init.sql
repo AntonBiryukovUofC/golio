@@ -1,7 +1,5 @@
 create table users(
-    id SERIAL primary key,
-    username varchar,
-    email varchar
+    username varchar primary key
 );
 
 
@@ -9,11 +7,11 @@ create table boards(
     id SERIAL primary key,
     board_elo integer,
     board json,
-    board_owner integer,
+    board_owner varchar,
     board_name varchar,
     constraint fk_board_owner
         foreign key (board_owner)
-        REFERENCES users (id)
+        REFERENCES users (username)
 );
 
 

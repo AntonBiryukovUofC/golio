@@ -14,7 +14,7 @@ from match.match import play_match
 from models import Board, History, User, db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:golio@localhost/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@localhost/postgres'
 
 db.init_app(app)
 app.app_context().push()
@@ -164,10 +164,11 @@ class Servlet:
 
         # assemble the boards
         board_big = build_board(match_data)
+        username_list = [ii[0] for ii in match_data]
 
         # Create a dictionary (JSON) :
         # dict_data = {'X':[[1,0,3],[0,3,2]],'n_steps':400}
-        board_data = {'X': board_big.get_numpy_array().tolist(), 'n_steps': 1000}
+        board_data = {'X': board_big.get_numpy_array().tolist(), 'n_steps': 1000, 'usernames': username_list}
         print(board_data)
         script = server_document(
             url="http://localhost:5006/lifeplayer_plot", arguments=board_data)

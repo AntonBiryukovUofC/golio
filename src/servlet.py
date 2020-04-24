@@ -1,9 +1,11 @@
 from flask import Flask, render_template, g, request, jsonify, send_file, redirect
-import game
+import numpy as np
 from flask_sqlalchemy import SQLAlchemy
 import os
 import json
 import requests
+
+from match.match import play_match
 from models import Board, History, User, db
 
 app = Flask(__name__)
@@ -70,8 +72,23 @@ class Servlet:
 
     @app.route("/playmatch", methods=["POST"])
     def playmatch():
-        print(request.data)
-        return redirect("/history")
+        print(request.form)
+
+        board_ids = list(request.form.keys())
+
+        match_data = []
+        for b_id in board_ids:
+            board = Board.query.get(b_id)
+            user_id = board.board_owner
+            board_data = np.array(json.loads(board.board))
+
+            match_data.append((user_id, board_data))
+
+        winner = play_match(2000, 100, match_data)
+        new_result = History(boards_included=board_ids, winner=winner)
+
+
+        return redirect("/games")
 
     # eventual edit maybe TODO
     @app.route("/input/<int:board_id>")

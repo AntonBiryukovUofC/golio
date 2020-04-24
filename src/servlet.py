@@ -4,12 +4,14 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import json
 
-from models import Board, History, User
+from models import Board, History, User, db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/postgres'
-db = SQLAlchemy(app)
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@localhost/postgres'
+db.init_app(app)
+app.app_context().push()
+db.create_all()
+db.session.commit()
 
 
 # connect to db server
@@ -28,7 +30,16 @@ class Servlet:
     @app.route("/submit_board", methods=["POST"])
     def submit_board():
         data = request.json
-        new_board = Board(owner=data["user"], board=data["board"])
+
+        if User.query.filter(User.username==data["user"]).first() is None:
+            new_user = User(username=data["user"])
+            db.session.add(new_user)
+            db.session.commit()
+            user_id = new_user.id
+        else:
+            user_id = User.query.filter(User.username==data["user"]).first().id
+
+        new_board = Board(owner=user_id, board=data["board"])
         db.session.add(new_board)
         db.session.commit()
         return 'success', 200
@@ -41,6 +52,11 @@ class Servlet:
 
         return render_template('input.html', boardSize=boardSize)
 
+    @app.route("/playmatch", methods=["POST"])
+    def playmatch():
+        print(request.data)
+        return redirect("/history")
+
     # eventual edit maybe TODO
     @app.route("/input/<int:board_id>")
     def edit_input(self):
@@ -51,14 +67,15 @@ class Servlet:
         return render_template('users.html',users=User.query.all())
 
     @app.route("/boards")
-    @app.route("/boards/<username>")
-    def boards(username=None):
+    def boards():
+        args = request.args
+        username = args.get("username", None)
         if username is None:
-            return render_template('boards.html', otherboards=Board.query.all())
+            return render_template('boards.html', otherboards=Board.query.all(), username=None)
         else:
-            user_id = User.query.filter(username=username)
-            return render_template('boards.html', userboards=Board.query.filter(owner=user_id),
-                                   otherboards=Board.query.filter(User.owner != user_id), username=username)
+            user_id = User.query.filter(User.username==username).first().id
+            return render_template('boards.html', userboards=Board.query.filter(Board.board_owner==user_id),
+                                   otherboards=Board.query.filter(Board.board_owner != user_id), username=username)
 
     #list all results from db query TODO
     @app.route("/games", methods=["GET"])

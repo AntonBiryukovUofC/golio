@@ -23,3 +23,6 @@ class Cell:
 
     def __init__(self, team_id: int):
         self.team_id = team_id
+
+    def __repr__(self):
+        return f"Cell({self.team_id})"

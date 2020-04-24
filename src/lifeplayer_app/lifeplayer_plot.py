@@ -2,10 +2,12 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import panel as pn
-from bokeh.models import ColumnDataSource, LinearColorMapper
+from bokeh.models import ColumnDataSource, LinearColorMapper, ColorBar, CategoricalColorMapper, FixedTicker, Div
 from bokeh.palettes import Colorblind8
 from bokeh.plotting import figure
+import sys
 
+sys.path.insert(0, '/home/anton/Repos/golio')
 from src.common.gamestate import GameState
 
 
@@ -36,9 +38,7 @@ glider_gun = \
 gg_matrix = np.zeros((150, 170))
 gg_matrix[1:10, 1:37] = glider_gun
 gg_matrix = gg_matrix
-
-
-
+gg_matrix = np.random.randint(0, 5, size=gg_matrix.shape)
 
 args = pn.state.session_args
 X = np.array(get_arg('X', args, gg_matrix))
@@ -46,15 +46,23 @@ X = np.array(get_arg('X', args, gg_matrix))
 N_y = X.shape[0]
 N_x = X.shape[1]
 
-n_steps = get_arg('n_steps', args, 1000)
+usernames = get_arg('usernames', args, ['a', 'b'])
+n_steps = get_arg('n_steps', args, 50)
 X = X.astype(int)
-
 
 # args = pn.state.curdoc.session_context.request.arguments
 # print(f'Panel side {args}')
 
-new_palette = ['#FFFFFF'] + list(Colorblind8)
-mapper = LinearColorMapper(palette=new_palette,low = 0,high=4)
+new_palette = ['#FFFFFF'] + list(Colorblind8)[0:len(usernames)]
+mapper = LinearColorMapper(palette=new_palette, low=0, high=len(usernames))
+ticks = ["Dead"] + usernames
+label_dict = {i: ticks[i] for i in range(len(ticks))}
+mapper_cb = CategoricalColorMapper(palette=new_palette[0:len(usernames) + 1], factors=["Dead"] + usernames)
+
+div = pn.Row(*[
+    pn.pane.Markdown(f'### {ticks[i]}', style={'color': new_palette[i]}) for i in range(len(ticks))
+])
+
 
 def life_step_1(X):
     """Game of life step using generator expressions"""
@@ -98,12 +106,12 @@ def to_df(x):
 # chart_alt = pn.pane.Pane(chart(x=np.random.randint(low=0, high=12, size=(N_y, N_x))))
 
 
-p = figure(tools=[])
+p = figure(tools=[], width=900, height=800)
 # ds = ColumnDataSource(data=to_df(X))
 player = pn.widgets.DiscretePlayer(options=list(range(n_steps)), interval=60)
 X_dict = life_do_steps(X, n_steps=n_steps + 1)
 source = ColumnDataSource({'image': [X]})
-img = p.image(image='image', x=0, y=0, dw=10, dh=10, color_mapper = mapper, level="image",
+img = p.image(image='image', x=0, y=0, dw=10, dh=10, color_mapper=mapper, level="image",
               source=source)
 p.xaxis.visible = False
 p.xgrid.visible = False
@@ -118,5 +126,5 @@ def reset_chart(target, event):
 
 player.link(img, callbacks={'value': reset_chart})
 player.value = 0
-pane = pn.Column(args, player, p)
+pane = pn.Column(div, player, p)
 pane.servable()

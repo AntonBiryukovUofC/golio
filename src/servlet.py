@@ -14,7 +14,7 @@ from match.match import play_match
 from models import Board, History, User, db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@localhost/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:golio@localhost/postgres'
 
 db.init_app(app)
 app.app_context().push()

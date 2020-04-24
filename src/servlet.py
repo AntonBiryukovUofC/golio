@@ -51,8 +51,14 @@ class Servlet:
         return render_template('users.html',users=User.query.all())
 
     @app.route("/boards")
-    def boards():
-        return render_template('boards.html', boards=Board.query.all())
+    @app.route("/boards/<username>")
+    def boards(username=None):
+        if username is None:
+            return render_template('boards.html', otherboards=Board.query.all())
+        else:
+            user_id = User.query.filter(username=username)
+            return render_template('boards.html', userboards=Board.query.filter(owner=user_id),
+                                   otherboards=Board.query.filter(User.owner != user_id), username=username)
 
     #list all results from db query TODO
     @app.route("/games", methods=["GET"])

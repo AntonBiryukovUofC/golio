@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g, request, jsonify, send_file
+from flask import Flask, render_template, g, request, jsonify, send_file, redirect
 import game
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -21,14 +21,14 @@ class Servlet:
     def home():
         return render_template('landing.html')
 
-    #store into db TODO
+    #store into db
     @app.route("/submit_board", methods=["POST"])
     def submit_board():
-        data = request.form
-        new_board = Board(board_elo=1500, owner="current_user")
+        data = request.json
+        new_board = Board(board_elo=1500, owner=data.user, board=data.board, width=25)
         db.session.add(new_board)
         db.session.commit()
-        return
+        return redirect("/games", code=302)
         
     #get request returns the input page for a user to submit their eventual board TODO
     #post retrieves the actual board input and submits it into the game queue for eventual playing with others in the queue

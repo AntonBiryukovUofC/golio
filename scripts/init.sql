@@ -8,8 +8,7 @@ create table users(
 create table boards(
     id SERIAL primary key,
     board_elo integer,
-    board integer[],
-    width integer,
+    board json,
     board_owner integer,
     constraint fk_board_owner
         foreign key (board_owner)

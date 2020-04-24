@@ -19,9 +19,10 @@ class Board(db.Model):
     __tablename__ = 'boards'
 
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
     board_elo = db.Column(db.Integer)
     owner = db.Column(db.Integer, db.ForeignKey('user.id'))
-    board = db.Column(db.ARRAY(db.Integer))
+    board = db.Column(db.JSON)
     width = db.Column(db.Integer)
 
     def __init__(self, owner):

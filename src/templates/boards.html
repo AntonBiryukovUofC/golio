@@ -1,10 +1,34 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<li>
-  {% for board in boards %}
-    <ul>{{board}}</ul>
+
+{% if username is not none %}
+<h2>Your Boards</h2>
+<form action="/playmatch">
+  {% if userboards is not none}%
+  <li>
+  {% for board in userboards %}
+    <ul><input type="checkbox" name="{{board.id}}" value="true"> {{board}}</ul>
   {% endfor %}
-</li>
+  </li>
+  {% else %}
+  <p>Submit some boards to see them here!</p>
+  {% endif %}
+
+{% else %}
+<p>Enter username to see your boards</p>
+<form action="/boards" method="get">
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username"><br>
+  <input type="submit" value="Submit">
+</form>
+{% endif %}
+
+<h2>Other Boards</h2>
+{% for board in otherboards %}
+    <ul><input type="checkbox" name="{{board.id}}" value="true"> {{board}}</ul>
+{% endfor %}
 {% endblock %}
 
+  <input type="submit" value="Play Match!">
+</form>

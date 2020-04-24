@@ -31,7 +31,7 @@ class Board(db.Model):
         self.board_name = "test"
 
     def __repr__(self):
-        return f"<Board {self.id} {self.board_elo} {self.board_owner} {self.board_name}>"
+        return f"<Board {self.id} {self.board_elo} {self.board_owner} {self.board_name} {self.board}>"
 
 
 class User(db.Model):

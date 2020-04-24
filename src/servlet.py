@@ -25,19 +25,17 @@ class Servlet:
     #store into db
     @app.route("/submit_board", methods=["POST"])
     def submit_board():
-        user = request.form.get("user")
-        board = request.form.get("board")
-
-        new_board = Board(owner=user, board=board)
+        data = request.json
+        new_board = Board(owner=data["user"], board=data["board"])
         db.session.add(new_board)
         db.session.commit()
-        return redirect("/games", code=302)
+        return 'success', 200
         
     #get request returns the input page for a user to submit their eventual board TODO
     #post retrieves the actual board input and submits it into the game queue for eventual playing with others in the queue
     @app.route("/input", methods=["GET"])
     def input(boardSize=None):
-        boardSize = 30
+        boardSize = 25
 
         return render_template('input.html',boardSize=boardSize)
 
@@ -75,7 +73,7 @@ class Servlet:
     @app.route("/test/<int:boardSize>", methods=["GET", "POST"])
     @app.route("/test", methods=["GET", "POST"])
     def test(boardSize=None):
-        boardSize = 30
+        boardSize = 25
         if(request.method == "GET"):
             return render_template('tag.html',boardSize=boardSize)
         elif(request.method == "POST"):

@@ -1,13 +1,11 @@
-import streamlit as st
 import altair as alt
 import numpy as np
 import pandas as pd
 import panel as pn
-import panel.widgets as pnw
-import param
-from bokeh.models import ColumnDataSource,LinearColorMapper
-from bokeh.plotting import figure, curdoc
+from bokeh.models import ColumnDataSource, LinearColorMapper
 from bokeh.palettes import Colorblind8
+from bokeh.plotting import figure
+
 from src.common.gamestate import GameState
 
 

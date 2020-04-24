@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<li>
+<ul>
   {% for game in games %}
-    <ul>Game Between Boards {{game.boards_included}}, Winner= {{game.winner}}</ul>
+    <li>
+        Game Between Boards {{game.boards_included}}, Winner= {{game.winner}}, <a href="/results/{{game.id}}">Watch the game !</a>
+    </li>
   {% endfor %}
-</li>
+</ul>
 {% endblock %}
 

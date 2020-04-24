@@ -150,17 +150,21 @@ class Servlet:
 
 
     @app.route("/results/<int:game_id>")
-    def game(self, game_id):
+    def game(game_id):
         # pull game from History.
-        game_to_vis: History = History.query.get(game_id)
+        game_to_vis: History = History.query.filter(History.id == game_id).first()
+        print(game_to_vis)
         board_ids = game_to_vis.boards_included
-        boards = Board.query.get(board_ids)
+
+        boards = Board.query.filter(Board.id.in_(board_ids)).all()
         # assemble the boards
-        board_big = build_board(boards)
+        boards_list = [np.array(x.board) for x in boards]
+        print([b.shape for b in boards_list])
+        board_big = build_board(boards_list)
 
         # Create a dictionary (JSON) :
         # dict_data = {'X':[[1,0,3],[0,3,2]],'n_steps':400}
-        board_data = {'X':board_big,'n_steps':400}
+        board_data = {'X':board_big,'n_steps':1000}
         script = server_document(
             url="http://localhost:5006/lifeplayer_plot", arguments=board_data)
         print(script)

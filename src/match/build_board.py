@@ -30,5 +30,4 @@ def build_board(player_boards):
         if ii - y_counter*needed_board_size_x >= needed_board_size_x - 1:
             y_counter += 1
 
-    print(gs.grid)
     return gs

@@ -1,5 +1,23 @@
 {% extends "layout.html" %}
 
+{% block style %}
+<style>
+    .boardrow {
+        display: flex;
+    }
+    .selected {
+        width: 5px;
+        height: 5px;
+        background-color: black;
+    }
+  
+    .unselected {
+        width: 5px;
+        height: 5px;
+        background-color: grey;    
+    }
+  </style>
+{% endblock %}
 {% block body %}
 
 {% if username is not none %}
@@ -8,7 +26,22 @@
   {% if userboards is not none%}
   <li>
   {% for board in userboards %}
-    <ul><input type="checkbox" name="{{board.id}}" value="true"> {{board}}</ul>
+    <ul><input type="checkbox" name="{{board.id}}" value="true">
+        {{board.name}} 
+        <div class="boardcontainer">
+        {% for row in board.board %}
+            <div class="boardrow">
+            {% for element in row %}
+                {% if element %}
+                    <div class="selected" ></div>
+                {% else %}
+                    <div class="unselected" ></div>
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% endfor %}
+        </div>
+    </ul>
   {% endfor %}
   </li>
   {% else %}
@@ -26,7 +59,22 @@
 
 <h2>Other Boards</h2>
 {% for board in otherboards %}
-    <ul><input type="checkbox" name="{{board.id}}" value="true"> {{board}}</ul>
+    <ul><input type="checkbox" name="{{board.id}}" value="true">
+        {{board.name}} {{board.board_owner}}
+        <div class="boardcontainer">
+        {% for row in board.board %}
+            <div class="boardrow">
+            {% for element in row %}
+                {% if element %}
+                    <div class="selected" ></div>
+                {% else %}
+                    <div class="unselected" ></div>
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% endfor %}
+        </div>
+    </ul>
 {% endfor %}
 {% endblock %}
 

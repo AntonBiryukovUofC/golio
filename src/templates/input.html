@@ -26,9 +26,12 @@
           <br/>
         {% endfor %}
       </div>
+    <input type="range" min="0" max="100" value="50" class="slider" id="myRange" >
+    <label for="myRange">Percent of randomization</label>
+    <button onclick="randomizeBoard()">Randomize Board</button><br/>
     <button onclick="startGame()">Test Game</button><br/>
-
     <button onclick="submitBoard()">Start Game</button><br/>
+
     </div>
 
     <div class="col-4 test_div">
@@ -123,7 +126,23 @@ function checkNeighbors(gameboard, cell, boardHeight){
   }
 
 
-  function startGame(){
+
+
+function randomizeBoard(){
+    var slider = document.getElementById("myRange");
+    const p = slider.value/100;
+
+    for(i = 0;i < subboardHeight;i++){
+    for(j = 0;j < subboardHeight;j++){
+        cell = document.getElementById("[" + i + "," + j + "]")
+        if (Math.random() < p){
+                    invertClick(cell)
+        }
+    }
+    }
+    }
+
+function startGame(){
 
 for(i = 0;i < subboardHeight;i++){
   temp = [];
@@ -137,6 +156,10 @@ for(i = 0;i < subboardHeight;i++){
   }
   subboard1.push(temp);
 }
+
+
+
+
 
 insertBoard(gameboard,subboard1,[10,45],"#FF0000")
 

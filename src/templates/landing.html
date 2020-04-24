@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 {% block head %}
-{{ script_radio|indent(4)|safe }}
 {% endblock %}
 
 
@@ -24,7 +23,6 @@ Once we have your starting board we can run it against other people and determin
 </div>
 </div>
     {% block contents %}
-    <div>{{ div_radio |indent(4)|safe }}</div>
     {% endblock %}
 
 {% endblock %}

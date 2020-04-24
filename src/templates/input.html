@@ -33,10 +33,13 @@
         <br />
         {% endfor %}
       </div>
+      <input type="range" min="0" max="100" value="50" class="slider" id="myRange">
+      <label for="myRange">Percent of randomization</label>
+      <button onclick="randomizeBoard()">Randomize Board</button><br />
+
       <button onclick="startGame()">Test Game</button><br />
       <button onclick="clearTest()">Clear Test Game</button><br />
       <button onclick="resetBoard()">Reset input board</button><br />
-
       <button onclick="submitBoard()">Start Game</button><br />
     </div>
 
@@ -78,7 +81,7 @@
           cell.classList.remove('selected')
         }
       }
-      subboard1.push(temp);
+      subboard1 = temp;
     }
   }
 
@@ -91,6 +94,7 @@
   const clearTest = () => {
     clearInterval(currInterval)
     clearBoard()
+
   }
 
 
@@ -143,6 +147,23 @@
         gameboard[startCell[0] + i][startCell[1] + j][0] = subboard[i][j]
         if (subboard[i][j]) {
           gameboard[startCell[0] + i][startCell[1] + j][1] = hexcolour
+        }
+      }
+    }
+  }
+
+
+
+
+  function randomizeBoard() {
+    var slider = document.getElementById("myRange");
+    const p = slider.value / 100;
+    resetBoard()
+    for (i = 0; i < subboardHeight; i++) {
+      for (j = 0; j < subboardHeight; j++) {
+        cell = document.getElementById("[" + i + "," + j + "]")
+        if (Math.random() < p) {
+          invertClick(cell)
         }
       }
     }
@@ -202,17 +223,17 @@
     boardHeight = 100;
     currInterval = false
     subboardHeight = {{ boardSize }};
-  subboard1 = []
-  mousedown = false;
-  for (i = 0; i < boardHeight; i++) {
-    temp = [];
-    for (j = 0; j < boardHeight; j++) {
-      temp.push([0, ""]);
+    subboard1 = []
+    mousedown = false;
+    for (i = 0; i < boardHeight; i++) {
+      temp = [];
+      for (j = 0; j < boardHeight; j++) {
+        temp.push([0, ""]);
+      }
+      gameboard.push(temp);
     }
-    gameboard.push(temp);
-  }
 
-});
+  });
 
 
 </script>

@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 class History(db.Model):
     __tablename__ = 'history'
 
@@ -14,6 +15,7 @@ class History(db.Model):
 
     def __repr__(self):
         return f"<id {self.id}>"
+
 
 class Board(db.Model):
     __tablename__ = 'boards'

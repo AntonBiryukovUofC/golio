@@ -63,6 +63,7 @@
   const invertClick = (element) => element.classList.toggle('selected')
 
   const submitBoard = () => {
+    subboard1 = initSubboard()
     data = { board: subboard1, user: $('#username').val() }
     $.ajax({
       type: "POST",
@@ -98,6 +99,22 @@
 
   }
 
+  const initSubboard = () => {
+    temp1 = []
+    for (i = 0; i < subboardHeight; i++) {
+      temp = [];
+      for (j = 0; j < subboardHeight; j++) {
+        cell = document.getElementById("[" + i + "," + j + "]")
+        if (cell.classList.contains("selected")) {
+          temp.push(1);
+        } else {
+          temp.push(0);
+        }
+      }
+      temp1.push(temp);
+    }
+    return temp1
+  }
 
 
   function checkNeighbors(gameboard, cell, boardHeight) {
@@ -173,18 +190,7 @@
 
   function startGame() {
 
-    for (i = 0; i < subboardHeight; i++) {
-      temp = [];
-      for (j = 0; j < subboardHeight; j++) {
-        cell = document.getElementById("[" + i + "," + j + "]")
-        if (cell.classList.contains("selected")) {
-          temp.push(1);
-        } else {
-          temp.push(0);
-        }
-      }
-      subboard1.push(temp);
-    }
+    subboard1 = initSubboard()
 
     insertBoard(gameboard, subboard1, [10, 45], "#444444")
 

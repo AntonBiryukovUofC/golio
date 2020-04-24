@@ -150,13 +150,20 @@ class Servlet:
 
 
     @app.route("/results/<int:game_id>")
-    def game(self, game_id):
+    def game(game_id):
         # pull game from History.
         game_to_vis: History = History.query.get(game_id)
         board_ids = game_to_vis.boards_included
-        boards = Board.query.get(board_ids)
+
+        match_data = []
+        for b_id in board_ids:
+            board = Board.query.get(b_id)
+            username = board.board_owner
+            board_data = np.array(board.board)
+            match_data.append((username, board_data))
+
         # assemble the boards
-        board_big = build_board(boards)
+        board_big = build_board(match_data)
 
         # Create a dictionary (JSON) :
         # dict_data = {'X':[[1,0,3],[0,3,2]],'n_steps':400}

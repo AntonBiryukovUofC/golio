@@ -10,6 +10,9 @@
   .selected {
     background-color: #111;
   }
+  .outlined {
+    border: 1px solid #777;
+  }
 </style>
 {% endblock %}
 
@@ -18,6 +21,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-7 test_div">
+      <h1>input board</h1>
       <div id="inputboxes">
         {% for i in range(boardSize) %}
           {% for j in range(boardSize) %}
@@ -26,12 +30,15 @@
           <br/>
         {% endfor %}
       </div>
-    <button onclick="startGame()">Test Game</button><br/>
+      <button onclick="startGame()">Test Game</button><br/>
+      <button onclick="clearTest()">Clear Test Game</button><br/>
+      <button onclick="resetBoard()">Reset board</button><br/>
 
-    <button onclick="submitBoard()">Start Game</button><br/>
+      <button onclick="submitBoard()">Start Game</button><br/>
     </div>
 
     <div class="col-4 test_div">
+      <h1>test board</h1>
       <canvas id="GoL" class="GoL outlined" width="400" height="400"></canvas>
     </div>
   </div>
@@ -40,134 +47,140 @@
 
 {% block script %}
 <script type="text/javascript">
-var mousedown = false;
-
-const invertSelection = (element) => {
-  if (mousedown) {
-    element.classList.toggle('selected')
-  }
-}
-
-const invertClick = (element) => element.classList.toggle('selected')
-
-const submitBoard = () => {
-  data = {board: subboard1, user: 1}
-  console.log(data)
-  $.ajax({
-    type: "POST",
-    url: "/submit_board",
-    contentType: 'application/json',
-    data: JSON.stringify(data),
-    dataType: "json"
-  });
-}
-
-
-
-
-
-
-function checkNeighbors(gameboard, cell, boardHeight){
-    aliveCells = 0
-    parent_list = []
-    if(cell[0] == 0 && cell[1] == 0){//top left
-      aliveCells = gameboard[boardHeight][boardHeight][0] +  gameboard[boardHeight][0][0] +  gameboard[boardHeight][1][0] +  gameboard[0][boardHeight][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[1][boardHeight][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][cell[1]+1][0]
-    }else if(cell[0] == 0 && cell[1] == boardHeight){//top right
-      aliveCells = gameboard[boardHeight][cell[1]-1][0] +  gameboard[boardHeight][cell[1]][0] +  gameboard[boardHeight][0][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][0][0] +  gameboard[cell[0]+1][cell[1]-1][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][0][0]
-    }else if(cell[0] == boardHeight && cell[1] == 0){//bottom left
-      aliveCells = gameboard[cell[0]-1][boardHeight][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][cell[1]+1][0] +  gameboard[cell[0]][boardHeight][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[0][boardHeight][0] +  gameboard[0][cell[1]][0] +  gameboard[0][cell[1]+1][0]
-    }else if(cell[0] == boardHeight && cell[1] == boardHeight){//bottom right
-      aliveCells = gameboard[cell[0]-1][cell[1]-1][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][boardHeight][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][0][0] +  gameboard[0][cell[1]-1][0] +  gameboard[0][cell[1]][0] +  gameboard[0][0][0]
-    }else if(cell[0] == 0 && cell[1] != boardHeight){//top
-      aliveCells = gameboard[boardHeight][cell[1]-1][0] +  gameboard[boardHeight][cell[1]][0] +  gameboard[boardHeight][cell[1]+1][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[cell[0]+1][cell[1]-1][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][cell[1]+1][0]
-    }else if(cell[1] == 0 && cell[0] != boardHeight){//left
-      aliveCells = gameboard[cell[0]-1][boardHeight][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][cell[1]+1][0] +  gameboard[cell[0]][boardHeight][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[cell[0]+1][boardHeight][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][cell[1]+1][0]
-    }else if(cell[1] == boardHeight){//right
-      aliveCells = gameboard[cell[0]-1][cell[1]-1][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][0][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][0][0] +  gameboard[cell[0]+1][cell[1]-1][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][0][0]
-    }else if(cell[0] == boardHeight){//bottom
-      aliveCells = gameboard[cell[0]-1][cell[1]-1][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][cell[1]+1][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[0][cell[1]-1][0] +  gameboard[0][cell[1]][0] +  gameboard[0][cell[1]+1][0]
-    }else{//everything else
-      aliveCells = gameboard[cell[0]-1][cell[1]-1][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][cell[1]+1][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[cell[0]+1][cell[1]-1][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][cell[1]+1][0]
-      //if parent exists push colour to list 
-      parent_list.push()//push all that do not exist
+  const invertSelection = (element) => {
+    if (mousedown) {
+      element.classList.toggle('selected')
     }
-    return [aliveCells,"#FF0000"];
   }
 
-  function renderBoard(gameboard){
-    canvas = document.getElementById("GoL");
-    context = canvas.getContext("2d");
-    context.clearRect(0, 0, 400, 400);
-    for(i = 0; i < boardHeight;i++){
-      for(j = 0; j < boardHeight;j++){
-        if(gameboard[i][j][0] == 1){
-          context.fillStyle = gameboard[i][j][1];
-          context.fillRect(j*4,i*4,4,4)
-        }else{
-          context.fillStyle = "rgba("+0+","+0+","+0+","+(0/255)+")";
-          context.fillRect(j*4,i*4,4,4)
+  const invertClick = (element) => element.classList.toggle('selected')
+
+  const submitBoard = () => {
+    data = {board: subboard1, user: 1}
+    $.ajax({
+      type: "POST",
+      url: "/submit_board",
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      dataType: "json"
+    })
+  }
+
+  const resetBoard = () => {
+    for(i = 0;i < subboardHeight;i++){
+      temp = [];
+      for(j = 0;j < subboardHeight;j++){
+        cell = document.getElementById("[" + i + "," + j + "]")
+        if(cell.classList.contains("selected")){
+          cell.classList.remove('selected')
         }
       }
-    }
+    subboard1.push(temp);
   }
-
-  function insertBoard(gameboard,subboard,startCell,hexcolour){
-    for(i = 0; i < subboard.length;i++){
-      for(j = 0; j < subboard.length;j++){
-        gameboard[startCell[0]+i][startCell[1]+j][0] = subboard[i][j]
-        if(subboard[i][j]){
-          gameboard[startCell[0]+i][startCell[1]+j][1] = hexcolour
-        }
-      }
-    }
   }
 
 
-  function startGame(){
-
-for(i = 0;i < subboardHeight;i++){
-  temp = [];
-  for(j = 0;j < subboardHeight;j++){
-    cell = document.getElementById("[" + i + "," + j + "]")
-    if(cell.classList.contains("selected")){
-      temp.push(1);
-    }else{
-      temp.push(0);
-    }
+function checkNeighbors(gameboard, cell, boardHeight) {
+  aliveCells = 0
+  parent_list = []
+  if(cell[0] == 0 && cell[1] == 0){//top left
+    aliveCells = gameboard[boardHeight][boardHeight][0] +  gameboard[boardHeight][0][0] +  gameboard[boardHeight][1][0] +  gameboard[0][boardHeight][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[1][boardHeight][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][cell[1]+1][0]
+  }else if(cell[0] == 0 && cell[1] == boardHeight){//top right
+    aliveCells = gameboard[boardHeight][cell[1]-1][0] +  gameboard[boardHeight][cell[1]][0] +  gameboard[boardHeight][0][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][0][0] +  gameboard[cell[0]+1][cell[1]-1][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][0][0]
+  }else if(cell[0] == boardHeight && cell[1] == 0){//bottom left
+    aliveCells = gameboard[cell[0]-1][boardHeight][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][cell[1]+1][0] +  gameboard[cell[0]][boardHeight][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[0][boardHeight][0] +  gameboard[0][cell[1]][0] +  gameboard[0][cell[1]+1][0]
+  }else if(cell[0] == boardHeight && cell[1] == boardHeight){//bottom right
+    aliveCells = gameboard[cell[0]-1][cell[1]-1][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][boardHeight][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][0][0] +  gameboard[0][cell[1]-1][0] +  gameboard[0][cell[1]][0] +  gameboard[0][0][0]
+  }else if(cell[0] == 0 && cell[1] != boardHeight){//top
+    aliveCells = gameboard[boardHeight][cell[1]-1][0] +  gameboard[boardHeight][cell[1]][0] +  gameboard[boardHeight][cell[1]+1][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[cell[0]+1][cell[1]-1][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][cell[1]+1][0]
+  }else if(cell[1] == 0 && cell[0] != boardHeight){//left
+    aliveCells = gameboard[cell[0]-1][boardHeight][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][cell[1]+1][0] +  gameboard[cell[0]][boardHeight][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[cell[0]+1][boardHeight][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][cell[1]+1][0]
+  }else if(cell[1] == boardHeight){//right
+    aliveCells = gameboard[cell[0]-1][cell[1]-1][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][0][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][0][0] +  gameboard[cell[0]+1][cell[1]-1][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][0][0]
+  }else if(cell[0] == boardHeight){//bottom
+    aliveCells = gameboard[cell[0]-1][cell[1]-1][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][cell[1]+1][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[0][cell[1]-1][0] +  gameboard[0][cell[1]][0] +  gameboard[0][cell[1]+1][0]
+  }else{//everything else
+    aliveCells = gameboard[cell[0]-1][cell[1]-1][0] +  gameboard[cell[0]-1][cell[1]][0] +  gameboard[cell[0]-1][cell[1]+1][0] +  gameboard[cell[0]][cell[1]-1][0] +  gameboard[cell[0]][cell[1]+1][0] +  gameboard[cell[0]+1][cell[1]-1][0] +  gameboard[cell[0]+1][cell[1]][0] +  gameboard[cell[0]+1][cell[1]+1][0]
+    //if parent exists push colour to list 
+    parent_list.push()//push all that do not exist
   }
-  subboard1.push(temp);
+  return [aliveCells,"#444444"];
 }
 
-insertBoard(gameboard,subboard1,[10,45],"#FF0000")
-
-renderBoard(gameboard)
-setInterval(function(){
-  newBoard = []
-  for(i = 0; i < boardHeight; i++){
-    newRow = []
-    for(j = 0;j < boardHeight;j++){
-      temp = checkNeighbors(gameboard,[i,j],boardHeight-1);
-      if(gameboard[i][j][0] == 0){
-        if(temp[0] == 3){//live cell
-          newRow.push([1,temp[1]])
-        }
-        else{//dead cell
-          newRow.push([0,""])
-        }
+function renderBoard(gameboard){
+  canvas = document.getElementById("GoL");
+  context = canvas.getContext("2d");
+  context.clearRect(0, 0, 400, 400);
+  for(i = 0; i < boardHeight;i++){
+    for(j = 0; j < boardHeight;j++){
+      if(gameboard[i][j][0] == 1){
+        context.fillStyle = gameboard[i][j][1];
+        context.fillRect(j*4,i*4,4,4)
       }else{
-        if(temp[0] == 2 || temp[0] == 3){//live cell
-          newRow.push([1,temp[1]])
-        }else{//dead cell
-          newRow.push([0,""])
-        }
+        context.fillStyle = "rgba("+0+","+0+","+0+","+(0/255)+")";
+        context.fillRect(j*4,i*4,4,4)
       }
     }
-    newBoard.push(newRow)
   }
-  gameboard = newBoard
+}
+
+function insertBoard(gameboard,subboard,startCell,hexcolour){
+  for(i = 0; i < subboard.length;i++){
+    for(j = 0; j < subboard.length;j++){
+      gameboard[startCell[0]+i][startCell[1]+j][0] = subboard[i][j]
+      if(subboard[i][j]){
+        gameboard[startCell[0]+i][startCell[1]+j][1] = hexcolour
+      }
+    }
+  }
+}
+
+
+function startGame(){
+
+  for(i = 0;i < subboardHeight;i++){
+    temp = [];
+    for(j = 0;j < subboardHeight;j++){
+      cell = document.getElementById("[" + i + "," + j + "]")
+      if(cell.classList.contains("selected")){
+        temp.push(1);
+      }else{
+        temp.push(0);
+      }
+    }
+    subboard1.push(temp);
+  }
+
+  insertBoard(gameboard,subboard1,[10,45],"#444444")
+
   renderBoard(gameboard)
-  generation += 1
-},30);
+  setInterval(function(){
+    newBoard = []
+    for(i = 0; i < boardHeight; i++){
+      newRow = []
+      for(j = 0;j < boardHeight;j++){
+        temp = checkNeighbors(gameboard,[i,j],boardHeight-1);
+        if(gameboard[i][j][0] == 0){
+          if(temp[0] == 3){//live cell
+            newRow.push([1,temp[1]])
+          }
+          else{//dead cell
+            newRow.push([0,""])
+          }
+        }else{
+          if(temp[0] == 2 || temp[0] == 3){//live cell
+            newRow.push([1,temp[1]])
+          }else{//dead cell
+            newRow.push([0,""])
+          }
+        }
+      }
+      newBoard.push(newRow)
+    }
+    gameboard = newBoard
+    renderBoard(gameboard)
+    generation += 1
+  },30);
 }
 
 $(function(){
@@ -176,8 +189,8 @@ gameboard = [];
 boardHeight = 100;
 subboardHeight = {{boardSize}};
 subboard1 = []
-
-
+mousedown = false;
+var currentTimer
 for(i = 0;i < boardHeight;i++){
   temp = [];
   for(j = 0;j < boardHeight;j++){

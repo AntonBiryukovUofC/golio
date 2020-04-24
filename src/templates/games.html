@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<li>
+  {% for game in games %}
+    <ul>{{game}}</ul>
+  {% endfor %}
+</li>
+{% endblock %}
+

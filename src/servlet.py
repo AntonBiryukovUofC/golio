@@ -45,12 +45,16 @@ class Servlet:
 
     @app.route("/users")
     def users():
-        return str(User.query.all())
+        return render_template('users.html',users=User.query.all())
+
+    @app.route("/boards")
+    def boards():
+        return render_template('boards.html', boards=Board.query.all())
 
     #list all results from db query TODO
-    @app.route("/results", methods=["GET"])
+    @app.route("/games", methods=["GET"])
     def history():
-        return
+        return render_template('games.html',users=History.query.all())
 
     #visualize a game TODO
     @app.route("/results/<int:game_id>")

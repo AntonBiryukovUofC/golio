@@ -11,6 +11,9 @@ def play_match(final_gen, lookback_num_gens, player_boards):
     counts = deque([], maxlen=lookback_num_gens)
     for ii in range(0, final_gen):
         cell_counts = gs.cell_counts()
+        if len(cell_counts) == 0:
+            # everything is dead. stop here
+            break
         counts.append({
             player_index_to_id[idx]: value for idx, value in cell_counts.items()
         })

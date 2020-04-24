@@ -23,4 +23,4 @@ create table history(
     winner integer
 );
 
-insert into users (username, email) VALUES ("brayden", "brayden.arthur@energytoolbase.com");
+insert into users (username, email) VALUES ('brayden', 'brayden.arthur@energytoolbase.com');

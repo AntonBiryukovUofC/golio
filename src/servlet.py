@@ -1,10 +1,15 @@
+from pathlib import Path
+import atexit
+from src.match.build_board import build_board
+
+from bokeh.embed import server_document
 from flask import Flask, render_template, g, request, jsonify, send_file, redirect
 import numpy as np
 from flask_sqlalchemy import SQLAlchemy
 import os
 import json
 import requests
-
+import subprocess
 from match.match import play_match
 from models import Board, History, User, db
 
@@ -18,6 +23,27 @@ db.session.commit()
 USERNAMES = ['Gandolf', 'Legolas', 'Gimli', 'Darth Vader', 'Sauron', 'Saruman']
 
 # connect to db server
+
+# Bokeh Visualizer bits
+project_dir = Path(__file__).resolve().parents[1]
+print(project_dir)
+app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
+path_to_bokeh_py = f"{project_dir}/src/lifeplayer_app/lifeplayer_plot.py"
+
+if os.getenv('bokeh_runs', 'no') == 'no':
+    bokeh_process = subprocess.Popen(
+        [
+            "python",
+            "-m",
+            "panel",
+            "serve",
+            "--allow-websocket-origin=localhost:5000",
+            path_to_bokeh_py,
+        ],
+        stdout=subprocess.PIPE,
+    )
+    os.environ['bokeh_runs'] = 'yes'
+
 
 class Servlet:
     def __init__(self):
@@ -87,7 +113,6 @@ class Servlet:
         winner = play_match(2000, 100, match_data)
         new_result = History(boards_included=board_ids, winner=winner)
 
-
         return redirect("/games")
 
     # eventual edit maybe TODO
@@ -115,10 +140,29 @@ class Servlet:
     def history():
         return render_template('games.html', users=History.query.all())
 
-    # visualize a game TODO
+    @atexit.register
+    def kill_server():
+        bokeh_process.kill()
+        os.environ['bokeh_runs'] = 'no'
+
+
     @app.route("/results/<int:game_id>")
-    def game(self):
-        return
+    def game(self, game_id):
+        # pull game from History.
+        game_to_vis: History = History.query.get(game_id)
+        board_ids = game_to_vis.boards_included
+        boards = Board.query.get(board_ids)
+        # assemble the boards
+        board_big = build_board(boards)
+
+        # Create a dictionary (JSON) :
+        # dict_data = {'X':[[1,0,3],[0,3,2]],'n_steps':400}
+        board_data = {'X':board_big,'n_steps':400}
+        script = server_document(
+            url="http://localhost:5006/lifeplayer_plot", arguments=board_data)
+        print(script)
+        return render_template("lifeplayer_template.html", bokeh_script=script)
+
 
     # get request returns the input page for a user to submit their eventual board TODO
     # post retrieves the actual board input and submits it into the game queue for eventual playing with others in the queue

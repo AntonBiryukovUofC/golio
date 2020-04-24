@@ -35,7 +35,7 @@
       </div>
       <button onclick="startGame()">Test Game</button><br />
       <button onclick="clearTest()">Clear Test Game</button><br />
-      <button onclick="resetBoard()">Reset board</button><br />
+      <button onclick="resetBoard()">Reset input board</button><br />
 
       <button onclick="submitBoard()">Start Game</button><br />
     </div>
@@ -82,6 +82,18 @@
     }
   }
 
+  const clearBoard = () => {
+    canvas = document.getElementById("GoL");
+    context = canvas.getContext("2d");
+    context.clearRect(0, 0, 400, 400);
+  }
+
+  const clearTest = () => {
+    clearInterval(currInterval)
+    clearBoard()
+  }
+
+
 
   function checkNeighbors(gameboard, cell, boardHeight) {
     aliveCells = 0
@@ -111,9 +123,7 @@
   }
 
   function renderBoard(gameboard) {
-    canvas = document.getElementById("GoL");
-    context = canvas.getContext("2d");
-    context.clearRect(0, 0, 400, 400);
+    clearBoard();
     for (i = 0; i < boardHeight; i++) {
       for (j = 0; j < boardHeight; j++) {
         if (gameboard[i][j][0] == 1) {
@@ -157,7 +167,7 @@
     insertBoard(gameboard, subboard1, [10, 45], "#444444")
 
     renderBoard(gameboard)
-    setInterval(function () {
+    currInterval = setInterval(function () {
       newBoard = []
       for (i = 0; i < boardHeight; i++) {
         newRow = []
@@ -190,11 +200,10 @@
     generation = 0;
     gameboard = [];
     boardHeight = 100;
-    subboardHeight = {{ boardSize }
-  };
+    currInterval = false
+    subboardHeight = {{ boardSize }};
   subboard1 = []
   mousedown = false;
-  var currentTimer
   for (i = 0; i < boardHeight; i++) {
     temp = [];
     for (j = 0; j < boardHeight; j++) {

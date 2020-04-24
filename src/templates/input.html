@@ -41,7 +41,6 @@
 {% block script %}
 <script type="text/javascript">
 var mousedown = false;
-const inputBoard = Array({{boardSize | safe}}).fill({{boardSize | safe}})
 
 const invertSelection = (element) => {
   if (mousedown) {
@@ -51,12 +50,15 @@ const invertSelection = (element) => {
 
 const invertClick = (element) => element.classList.toggle('selected')
 
-function submitBoard(){
+const submitBoard = () => {
+  data = {board: subboard1, user: 1}
+  console.log(data)
   $.ajax({
-    url: "/input",
-    context: inputBoard
-    }).done(function() {
-      $( this ).addClass( "done" );
+    type: "POST",
+    url: "/submit_board",
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    dataType: "json"
   });
 }
 
@@ -174,9 +176,7 @@ gameboard = [];
 boardHeight = 100;
 subboardHeight = {{boardSize}};
 subboard1 = []
-subboard2 = []
-subboard3 = []
-subboard4 = []
+
 
 for(i = 0;i < boardHeight;i++){
   temp = [];

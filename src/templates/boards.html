@@ -5,7 +5,7 @@
 {% if username is not none %}
 <h2>Your Boards</h2>
 <form action="/playmatch">
-  {% if userboards is not none}%
+  {% if userboards is not none%}
   <li>
   {% for board in userboards %}
     <ul><input type="checkbox" name="{{board.id}}" value="true"> {{board}}</ul>

@@ -3,10 +3,10 @@ import game
 from flask_sqlalchemy import SQLAlchemy
 import os
 
-from models import Board
+from models import Board, History, User
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/postgres'
 db = SQLAlchemy(app)
 
 
@@ -42,6 +42,10 @@ class Servlet:
     @app.route("/input/<int:board_id>")
     def edit_input():
         return
+
+    @app.route("/users")
+    def users():
+        return str(User.query.all())
 
     #list all results from db query TODO
     @app.route("/results", methods=["GET"])

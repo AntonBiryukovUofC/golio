@@ -8,10 +8,11 @@ class History(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     boards_included = db.Column(db.ARRAY(db.Integer))
-    winner = db.Column(db.Integer)
+    winner = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, boards_included):
+    def __init__(self, boards_included, winner):
         self.boards_included = boards_included
+        self.winner = winner
 
     def __repr__(self):
         return f"<id {self.id}>"

@@ -15,7 +15,7 @@ class History(db.Model):
         self.winner = winner
 
     def __repr__(self):
-        return f"<id {self.id}>"
+        return f"<id {self.id} boards_included={self.boards_included} winner={self.winner}>"
 
 
 class Board(db.Model):

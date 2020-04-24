@@ -22,3 +22,5 @@ create table history(
     boards_included integer[],
     winner integer
 );
+
+insert into users (username, email) VALUES ("brayden", "brayden.arthur@energytoolbase.com");

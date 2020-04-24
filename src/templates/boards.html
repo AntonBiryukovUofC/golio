@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<li>
+  {% for board in boards %}
+    <ul>{{board}}</ul>
+  {% endfor %}
+</li>
+{% endblock %}
+

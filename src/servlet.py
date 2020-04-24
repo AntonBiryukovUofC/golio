@@ -2,6 +2,7 @@ from flask import Flask, render_template, g, request, jsonify, send_file, redire
 import game
 from flask_sqlalchemy import SQLAlchemy
 import os
+import json
 
 from models import Board, History, User
 
@@ -24,8 +25,10 @@ class Servlet:
     #store into db
     @app.route("/submit_board", methods=["POST"])
     def submit_board():
-        data = request.json
-        new_board = Board(board_elo=1500, owner=data.user, board=data.board, width=25)
+        user = request.form.get("user")
+        board = request.form.get("board")
+
+        new_board = Board(owner=user, board=board)
         db.session.add(new_board)
         db.session.commit()
         return redirect("/games", code=302)

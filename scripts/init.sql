@@ -1,12 +1,12 @@
 create table users(
-    id integer primary key,
+    id SERIAL primary key,
     username varchar,
     email varchar
 );
 
 
 create table boards(
-    id integer primary key,
+    id SERIAL primary key,
     board_elo integer,
     board integer[],
     width integer,
@@ -18,7 +18,7 @@ create table boards(
 
 
 create table history(
-    id integer primary key,
+    id SERIAL primary key,
     boards_included integer[],
     winner integer
 );

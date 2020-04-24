@@ -9,7 +9,7 @@ from match.match import play_match
 from models import Board, History, User, db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:golio@localhost/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@localhost/postgres'
 db = SQLAlchemy(app)
 db.init_app(app)
 app.app_context().push()
@@ -77,16 +77,18 @@ class Servlet:
         board_ids = list(request.form.keys())
 
         match_data = []
+        print(f"starting match with boards {board_ids}")
         for b_id in board_ids:
             board = Board.query.get(b_id)
             user_id = board.board_owner
-            board_data = np.array(json.loads(board.board))
+            board_data = np.array(board.board)
 
             match_data.append((user_id, board_data))
 
-        winner = play_match(2000, 100, match_data)
-        new_result = History(boards_included=board_ids, winner=winner)
-
+        winner = play_match(1000, 100, match_data)
+        new_result = History(boards_included=[int(id) for id in board_ids], winner=winner)
+        db.session.add(new_result)
+        db.session.commit()
 
         return redirect("/games")
 

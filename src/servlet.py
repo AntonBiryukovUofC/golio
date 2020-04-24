@@ -7,7 +7,7 @@ import json
 from models import Board, History, User
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:golio@localhost/postgres'
 db = SQLAlchemy(app)
 
 

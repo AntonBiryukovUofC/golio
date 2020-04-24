@@ -1,11 +1,7 @@
-{% block head %}
-<title> Life Player</title>
+{% extends "layout.html" %}
 
-
-{% endblock %}
 
 {% block body %}
-{% block content %}
     <p> Hello Life player !!!</p>
     <div id="cloader">
     <img src="/static/loader.gif">
@@ -14,5 +10,4 @@
 {% endblock %}
 {% block scripts %}
 <script> document.getElementById("cloader").style.display = "none";</script>
-{% endblock %}
 {% endblock %}

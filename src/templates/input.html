@@ -40,7 +40,8 @@
       <button onclick="startGame()">Test Game</button><br />
       <button onclick="clearTest()">Clear Test Game</button><br />
       <button onclick="resetBoard()">Reset input board</button><br />
-      <button onclick="submitBoard()">Start Game</button><br />
+      <input type="text" placeholder="username" id="username" /><br />
+      <button onclick="submitBoard()">Submit board</button><br />
     </div>
 
     <div class="col-4 test_div">
@@ -62,7 +63,7 @@
   const invertClick = (element) => element.classList.toggle('selected')
 
   const submitBoard = () => {
-    data = { board: subboard1, user: 1 }
+    data = { board: subboard1, user: $('#username').val() }
     $.ajax({
       type: "POST",
       url: "/submit_board",

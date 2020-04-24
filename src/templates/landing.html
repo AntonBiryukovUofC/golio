@@ -1,4 +1,9 @@
 {% extends "layout.html" %}
+{% block head %}
+{{ script_radio|indent(4)|safe }}
+{% endblock %}
+
+
 {% block style %}
 <style>
 .landing{
@@ -18,4 +23,8 @@ Your first step is creating an input board by clicking <a href="input">here</a> 
 Once we have your starting board we can run it against other people and determine how well your board does against others</p>
 </div>
 </div>
+    {% block contents %}
+    <div>{{ div_radio |indent(4)|safe }}</div>
+    {% endblock %}
+
 {% endblock %}

@@ -22,7 +22,7 @@
 
 {% if username is not none %}
 <h2>Your Boards</h2>
-<form action="/playmatch">
+<form action="/playmatch" method="post">
   {% if userboards is not none%}
   <li>
   {% for board in userboards %}
@@ -76,7 +76,9 @@
         </div>
     </ul>
 {% endfor %}
-{% endblock %}
 
   <input type="submit" value="Play Match!">
+{% endblock %}
+
+
 </form>

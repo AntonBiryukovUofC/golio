@@ -91,6 +91,12 @@ class GameState:
 
         return  new_state
 
+    def cell_counts(self):
+        array = self.get_numpy_array()
+        unique, counts = np.unique(array, return_counts=True)
+
+        return {key: val for key, val in zip(unique, counts) if key != 0}
+
     def get_numpy_array(self):
         new_array = []
         for ii in range(0, self.y):

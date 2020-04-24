@@ -10,6 +10,7 @@ create table boards(
     board_elo integer,
     board json,
     board_owner integer,
+    board_name varchar,
     constraint fk_board_owner
         foreign key (board_owner)
         REFERENCES users (id)

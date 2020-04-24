@@ -2,8 +2,8 @@
 {% block style %}
 <style>
   .inputbox {
-    width: 25px;
-    height: 25px;
+    width: 23px;
+    height: 23px;
     display: inline-block;
     border: 1px black solid;
   }
@@ -15,22 +15,26 @@
 
 
 {% block body %}
-<div class=" col-md-8 test_div">
-<div id="inputboxes">
-  {% for i in range(boardSize) %}
-    {% for j in range(boardSize) %}
-<div class="inputbox" id="[{{i}},{{j}}]" onclick="invertClick(this)" onmousedown="mousedown=true" onmouseup="mousedown=false" onmouseover="invertSelection(this)"></div>
-    {% endfor %}
-    <br/>
-  {% endfor %}
-</div>
-<button onclick="startGame()">Test Game</button><br/>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-7 test_div">
+      <div id="inputboxes">
+        {% for i in range(boardSize) %}
+          {% for j in range(boardSize) %}
+      <div class="inputbox" id="[{{i}},{{j}}]" onclick="invertClick(this)" onmousedown="mousedown=true" onmouseup="mousedown=false" onmouseover="invertSelection(this)"></div>
+          {% endfor %}
+          <br/>
+        {% endfor %}
+      </div>
+    <button onclick="startGame()">Test Game</button><br/>
 
-<button onclick="submitBoard()">Start Game</button><br/>
-</div>
+    <button onclick="submitBoard()">Start Game</button><br/>
+    </div>
 
-<div class=" col-md-4 test_div">
-  <canvas id="GoL" class="GoL outlined" width="400" height="400"></canvas>
+    <div class="col-4 test_div">
+      <canvas id="GoL" class="GoL outlined" width="400" height="400"></canvas>
+    </div>
+  </div>
 </div>
 {% endblock %}
 

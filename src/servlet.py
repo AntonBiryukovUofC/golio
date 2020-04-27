@@ -37,7 +37,7 @@ if os.getenv('bokeh_runs', 'no') == 'no':
             "-m",
             "panel",
             "serve",
-            "--allow-websocket-origin=localhost:5000",
+            "--allow-websocket-origin=*",
             path_to_bokeh_py,
         ],
         stdout=subprocess.PIPE,

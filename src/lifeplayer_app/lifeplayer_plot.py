@@ -60,7 +60,7 @@ label_dict = {i: ticks[i] for i in range(len(ticks))}
 mapper_cb = CategoricalColorMapper(palette=new_palette[0:len(usernames) + 1], factors=["Dead"] + usernames)
 
 div = pn.Row(*[
-    pn.pane.Markdown(f'### {ticks[i]}', style={'color': new_palette[i]}) for i in range(len(ticks))
+    pn.pane.Markdown(f'# {ticks[i]}', style={'color': new_palette[i]}) for i in range(len(ticks))
 ])
 
 
